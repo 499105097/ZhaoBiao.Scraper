@@ -11,6 +11,7 @@
 - ✅ **灵活配置**：可自定义抓取参数、时间间隔等设置
 - ✅ **跨平台**：支持Windows、macOS、Linux多种操作系统
 - ✅ **易于使用**：提供批处理文件和命令行两种使用方式
+- ✅ **可执行文件**：支持打包为独立可执行程序，无需Python环境
 
 ## 📋 功能列表
 
@@ -28,16 +29,6 @@
 - 发布时间和详情链接
 - **自动存储到fa_crawler表**
 
-## 🗄️ 数据库配置
-
-程序使用以下MySQL数据库配置：
-- 主机：8.156.76.75
-- 数据库：bczy
-- 用户名：bczzy
-- 表结构：
-  - `fa_candidate`：中标候选人表
-  - `fa_crawler`：招标公告表
-
 ## 🛠️ 快速开始
 
 ### Windows用户（推荐）
@@ -46,7 +37,16 @@
 2. **环境设置**：双击 `setup.bat` 自动安装Python依赖（包括pymysql）
 3. **开始使用**：双击 `start.bat` 立即开始抓取并存储到数据库
 
-### 通用方法
+### 可执行文件部署（无需Python环境）
+
+1. **下载可执行文件**：从发布页面下载最新的可执行文件包
+2. **解压文件**：将ZIP文件解压到任意目录
+3. **直接运行**：
+   - 双击 `start_scraper.bat` 立即开始抓取
+   - 双击 `start_scheduler.bat` 启动定时任务程序
+4. **修改配置**：根据需要编辑 `config.ini` 文件
+
+### 通用方法（需要Python环境）
 
 ```bash
 # 1. 安装依赖（包含新增的pymysql数据库驱动）
@@ -75,6 +75,22 @@ python scraper.py --type candidates --date 2025-07-17
 python scraper.py --type announcements --date 2025-07-17
 ```
 
+### 可执行文件使用示例
+
+```bash
+# 抓取昨天的所有信息并存储到数据库
+BidScraper.exe
+
+# 抓取指定日期的信息并存储到数据库
+BidScraper.exe --date 2025-07-17
+
+# 只抓取中标候选人信息并存储到fa_candidate表
+BidScraper.exe --type candidates --date 2025-07-17
+
+# 只抓取招标公告信息并存储到fa_crawler表
+BidScraper.exe --type announcements --date 2025-07-17
+```
+
 ## 📁 项目结构
 
 ```
@@ -83,9 +99,18 @@ python scraper.py --type announcements --date 2025-07-17
 ├── scheduler.py            # 定时任务程序
 ├── config.ini              # 配置文件
 ├── requirements.txt        # 依赖包列表（包含pymysql）
-├── setup.bat              # Windows环境设置脚本
-├── setup.sh               # Linux/macOS环境设置脚本
-├── start.bat              # Windows快速启动脚本
+├── setup.bat               # Windows环境设置脚本
+├── setup.sh                # Linux/macOS环境设置脚本
+├── start.bat               # Windows快速启动脚本
+├── build_exe.py            # 可执行文件打包脚本
+├── build_exe.bat           # Windows打包启动脚本
+├── dist/                   # 打包后的可执行文件目录
+│   ├── BidScraper.exe      # 爬虫主程序可执行文件
+│   ├── BidScheduler.exe    # 定时任务可执行文件
+│   ├── start_scraper.bat   # 爬虫启动脚本
+│   ├── start_scheduler.bat # 定时任务启动脚本
+│   ├── config.ini          # 配置文件副本
+│   └── README.md           # 说明文件副本
 ├── 数据库信息.md           # 数据库连接和表结构信息
 └── README.md              # 项目说明文件
 ```
