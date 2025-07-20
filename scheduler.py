@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from apscheduler.schedulers.blocking import BlockingScheduler
 import time
 import os
@@ -71,16 +71,22 @@ class ScheduledScraper:
             logging.info("Scheduled task started")
             logging.info("=" * 60)
             
-            # Execute bid candidate scraping
+            # 计算要抓取的日期：当前日期的前一天（即真正的昨天）
+            target_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+            logging.info(f"Setting target scraping date to: {target_date}")
+            
+            # Execute bid candidate scraping with explicit target date
             logging.info("Starting bid candidate information scraping...")
+            self.candidate_scraper = BidCandidateScraper(target_date=target_date)
             self.candidate_scraper.scrape_candidates()
             
             # Wait a while
             logging.info("Candidate scraping completed, waiting 5 seconds before starting bid announcement scraping...")
             time.sleep(5)
             
-            # Execute bid announcement scraping
+            # Execute bid announcement scraping with explicit target date
             logging.info("Starting bid announcement information scraping...")
+            self.announcement_scraper = BidAnnouncementScraper(target_date=target_date)
             self.announcement_scraper.scrape_announcements()
             
             logging.info("=" * 60)
