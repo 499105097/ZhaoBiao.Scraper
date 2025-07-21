@@ -9,6 +9,7 @@ import atexit
 import configparser
 import signal
 import sys
+from scraper import BidCandidateScraper, BidAnnouncementScraper
 
 # Configure logging
 logging.basicConfig(
@@ -22,8 +23,6 @@ logging.basicConfig(
 
 class ScheduledScraper:
     def __init__(self, config_file='config.ini'):
-        from scraper import BidCandidateScraper, BidAnnouncementScraper
-        
         # Read configuration file
         self.config = configparser.ConfigParser()
         self.config.read(config_file, encoding='utf-8')
